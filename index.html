@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chatbot GPT</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        #chatbox { width: 60%; margin: auto; border: 1px solid #ccc; padding: 10px; text-align: left; }
+        input { width: 70%; padding: 10px; margin-top: 10px; }
+        button { padding: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Chat avec GPT</h2>
+    <div id="chatbox"></div>
+    <input type="text" id="question" placeholder="Pose ta question ici...">
+    <button onclick="askGPT()">Envoyer</button>
+
+    <script>
+        async function askGPT() {
+            let question = document.getElementById("question").value;
+            let chatbox = document.getElementById("chatbox");
+
+            chatbox.innerHTML += "<p><strong>Vous :</strong> " + question + "</p>";
+
+            let response = await fetch("https://api.openai.com/v1/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer TON_API_KEY"
+                },
+                body: JSON.stringify({
+                    model: "gpt-4",
+                    prompt: question,
+                    max_tokens: 100
+                })
+            });
+
+            let data = await response.json();
+            chatbox.innerHTML += "<p><strong>GPT :</strong> " + data.choices[0].text + "</p>";
+        }
+    </script>
+</body>
+</html>
